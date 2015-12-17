@@ -7,14 +7,14 @@ $(programa): $(programa).o smpl.o rand.o
 	$(COMP) -o $@ -Bstatic $(programa).o smpl.o rand.o -lm -fPIC
 
 smpl.o: smpl.c smpl.h
-	$(COMP) -c smpl.c
+	$(COMP) -c smpl.c -fPIC
 
 $(programa).o: $(programa).c smpl.h
-	$(COMP) -c  $(programa).c
+	$(COMP) -c  $(programa).c -fPIC
 
 rand.o: rand.c
-	$(COMP) -c rand.c
+	$(COMP) -c rand.c -fPIC
 
 clean:
-	$(RM) $(programa).o $(programa)
+	$(RM) $(programa).o $(programa) 
  
