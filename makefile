@@ -4,7 +4,7 @@ programa=ring
 all: $(programa)
 
 $(programa): $(programa).o smpl.o rand.o
-	$(COMP) -o $@ -Bstatic $(programa).o smpl.o rand.o -lm
+	$(COMP) -o $@ -Bstatic $(programa).o smpl.o rand.o -lm -fPIC
 
 smpl.o: smpl.c smpl.h
 	$(COMP) -c smpl.c
