@@ -17,4 +17,5 @@ rand.o: rand.c
 
 clean:
 	$(RM) $(programa).o $(programa) 
+	$(RM) *.o
  
