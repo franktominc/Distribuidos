@@ -34,31 +34,32 @@ int main(){
     schedule(TESTAR, 30.0, i);
   }
   schedule(FALHAR, 270.0, 2);
+  schedule(FALHAR, 240, 1);
 
   do{
     cause(&evento, &x);
     
     switch(evento){
     case TESTAR:
-      if(node_status[k])
-	continue;
       
+      if(!node_status[k]){
       
-      printf("O nodo %d testou o nodo %d no tempo %5.1f - ",k, who_to_test[k], time());
-      int st = status(node[k]);
-      if(st != 0){
-	printf("falho!\n");
+	printf("O nodo %d testou o nodo %d no tempo %5.1f - ",k, who_to_test[k], time());
+	int st = status(node[who_to_test[k]]);
+	if(st != 0){
+	  printf("falho!\n");
 	
-	node_status[who_to_test[k]] = 1;
+	  node_status[who_to_test[k]] = 1;
 
-	who_to_test[k]++;
-      }else
-	printf("nao falho\n");   
+	  who_to_test[k]++;
+	}else
+	  printf("nao falho\n");
+      }
       break;
     case FALHAR:
       r = request(node[x-1],x, 0);
       node_status[x] = 1;
-      printf("O nodo %d falhou\n", x);
+      printf("O nodo %d falhou\n", x-1);
       break;
     }
    
