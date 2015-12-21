@@ -8,16 +8,18 @@ int main(){
   int evento, x;
   int i, n = 10;
   int node[n];
-  short node_status[n];
+  short node_status[n+2];
   int who_to_test[n];
   char facility_name[6];
   int k = 0;
+  int node_tester;
+  int r=0;
 
   smpl(0, "ring");
   reset();
   stream(1);
   
-  memset(node_status, 0, n);
+  memset(node_status, 0, n*sizeof(int));
   
   for(i=0; i < n; i++){
     memset(facility_name, '\0', 5);
@@ -31,21 +33,39 @@ int main(){
   for(i = 0; i < n; i++){
     schedule(TESTAR, 30.0, i);
   }
-  
-  while(time() <= 300){
+  schedule(FALHAR, 270.0, 2);
+
+  do{
     cause(&evento, &x);
+    
     switch(evento){
     case TESTAR:
-      printf("O nodo %d testou o nodo %d no tempo %5.1f - ", (k++)%n, who_to_test[k%n], time());
-      int st = status(node[k%n]);
-      if(st != 0)
+      if(node_status[k])
+	continue;
+      
+      
+      printf("O nodo %d testou o nodo %d no tempo %5.1f - ",k, who_to_test[k], time());
+      int st = status(node[k]);
+      if(st != 0){
 	printf("falho!\n");
-      else
-	printf("nao falho\n");
-      schedule(TESTAR, 30.0, x);
+	
+	node_status[who_to_test[k]] = 1;
+
+	who_to_test[k]++;
+      }else
+	printf("nao falho\n");   
+      break;
+    case FALHAR:
+      r = request(node[x-1],x, 0);
+      node_status[x] = 1;
+      printf("O nodo %d falhou\n", x);
       break;
     }
-    //printf("No while\n");
-  }
+   
+    if(!node_status[k])
+      schedule(TESTAR, 20.0, k);
+    k=(++k)%n;
+    //printf("%d\n", k);
+  }while(time()<300);
   return 0;
 }
